@@ -2,43 +2,81 @@ package com.Santiago.mockTest.infrastructure.services;
 
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Santiago.mockTest.api.Dto.Request.UserRequest;
 import com.Santiago.mockTest.api.Dto.Response.UserResponse;
+import com.Santiago.mockTest.domain.entities.User;
+import com.Santiago.mockTest.domain.repositories.UserRepository;
 import com.Santiago.mockTest.infrastructure.abstracts.IUserService;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class UserService implements IUserService {
+
+  @Autowired
+  private final UserRepository userRepository;
 
   @Override
   public UserResponse create(UserRequest request) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'create'");
+    
+    User user = new User();
+
+    BeanUtils.copyProperties(request, user);
+
+    return this.userToUserResponse(this.userRepository.save(user));
   }
 
   @Override
   public UserResponse update(UserRequest request, Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'update'");
+    User user = this.findUser(id);
+
+    this.userRequestToUser(request, user);
+
+    return this.userToUserResponse(this.userRepository.save(user));
   }
 
   @Override
   public boolean delete(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    User user = this.findUser(id);
+
+    this.userRepository.delete(user);
+
+    return true;
   }
 
   @Override
   public UserResponse findById(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    User user = this.findUser(id);
+
+    return this.userToUserResponse(user);
+  }
+  private User findUser(Long id){
+    
+    return this.userRepository.findById(id).orElseThrow();
   }
 
   @Override
   public List<UserResponse> getAll() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    return this.userRepository.findAll().stream().map(this::userToUserResponse).toList();
   }
 
+  private UserResponse userToUserResponse(User user){
+    UserResponse userResponse = new UserResponse();
+
+    BeanUtils.copyProperties(user, userResponse);
+
+    return userResponse;
+  }
+  private User userRequestToUser(UserRequest userRequest, User user){
+    BeanUtils.copyProperties(userRequest, user);
+
+    return user;
+  }
 }
