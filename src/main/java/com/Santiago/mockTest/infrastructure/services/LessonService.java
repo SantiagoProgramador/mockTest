@@ -4,21 +4,21 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.Santiago.mockTest.api.Dto.Request.UserRequest;
-import com.Santiago.mockTest.api.Dto.Response.UserResponse;
-import com.Santiago.mockTest.infrastructure.abstracts.IUserService;
+import com.Santiago.mockTest.api.Dto.Request.LessonRequest;
+import com.Santiago.mockTest.api.Dto.Response.LessonResponse;
+import com.Santiago.mockTest.infrastructure.abstracts.ILessonService;
 
 @Service
-public class UserService implements IUserService {
+public class LessonService implements ILessonService {
 
   @Override
-  public UserResponse create(UserRequest request) {
+  public LessonResponse create(LessonRequest request) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'create'");
   }
 
   @Override
-  public UserResponse update(UserRequest request, Long id) {
+  public LessonResponse update(LessonRequest request, Long id) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'update'");
   }
@@ -30,13 +30,13 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public UserResponse findById(Long id) {
+  public LessonResponse findById(Long id) {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'findById'");
   }
 
   @Override
-  public List<UserResponse> getAll() {
+  public List<LessonResponse> getAll() {
     // TODO Auto-generated method stub
     throw new UnsupportedOperationException("Unimplemented method 'getAll'");
   }

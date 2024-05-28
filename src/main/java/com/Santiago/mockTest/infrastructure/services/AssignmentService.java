@@ -9,7 +9,7 @@ import com.Santiago.mockTest.api.Dto.Response.UserResponse;
 import com.Santiago.mockTest.infrastructure.abstracts.IUserService;
 
 @Service
-public class UserService implements IUserService {
+public class AssignmentService implements IUserService {
 
   @Override
   public UserResponse create(UserRequest request) {
