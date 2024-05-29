@@ -2,6 +2,10 @@ package com.Santiago.mockTest.api.Controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Santiago.mockTest.api.Dto.Request.CourseRequest;
+import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
+import com.Santiago.mockTest.infrastructure.abstracts.ICourseService;
+
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,4 +26,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 @AllArgsConstructor
 public class CourseController {
 
+  @Autowired
+  private final ICourseService iCourseService;
+
+  @GetMapping(path = "/all")
+  public ResponseEntity<List<CourseResponse>> showAll() {
+
+    return ResponseEntity.ok(this.iCourseService.getAll());
+  }
+
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<CourseResponse> showCourse(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iCourseService.findById(id));
+  }
+
+  @PostMapping(path = "/add")
+  public ResponseEntity<CourseResponse> addCourse(@Validated @RequestBody CourseRequest courseRequest) {
+
+    return ResponseEntity.ok(this.iCourseService.create(courseRequest));
+  }
+
+  @PutMapping(path = "/{id}")
+  public ResponseEntity<CourseResponse> updateCourse(@PathVariable Long id,
+      @Validated @RequestBody CourseRequest courseRequest) {
+
+    return ResponseEntity.ok(this.iCourseService.update(courseRequest, id));
+  }
+
+  @DeleteMapping(path = "/{id}")
+  public ResponseEntity<Boolean> deleteCourse(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iCourseService.delete(id));
+  }
 }

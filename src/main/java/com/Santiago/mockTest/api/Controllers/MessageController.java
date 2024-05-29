@@ -2,6 +2,10 @@ package com.Santiago.mockTest.api.Controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Santiago.mockTest.api.Dto.Request.MessageRequest;
+import com.Santiago.mockTest.api.Dto.Response.MessageResponse;
+import com.Santiago.mockTest.infrastructure.abstracts.IMessageService;
+
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,4 +26,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 @AllArgsConstructor
 public class MessageController {
 
+  @Autowired
+  private final IMessageService iMessageService;
+
+  @GetMapping(path = "/all")
+  public ResponseEntity<List<MessageResponse>> showAll() {
+
+    return ResponseEntity.ok(this.iMessageService.getAll());
+  }
+
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<MessageResponse> showMessage(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iMessageService.findById(id));
+  }
+
+  @PostMapping(path = "/add")
+  public ResponseEntity<MessageResponse> addMessage(@Validated @RequestBody MessageRequest messageRequest) {
+
+    return ResponseEntity.ok(this.iMessageService.create(messageRequest));
+  }
+
+  @PutMapping(path = "/{id}")
+  public ResponseEntity<MessageResponse> updateMessage(@PathVariable Long id,
+      @Validated @RequestBody MessageRequest messageRequest) {
+
+    return ResponseEntity.ok(this.iMessageService.update(messageRequest, id));
+  }
+
+  @DeleteMapping(path = "/{id}")
+  public ResponseEntity<Boolean> deleteMessage(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iMessageService.delete(id));
+  }
 }

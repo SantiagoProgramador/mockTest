@@ -2,6 +2,10 @@ package com.Santiago.mockTest.api.Controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Santiago.mockTest.api.Dto.Request.EnrollmentRequest;
+import com.Santiago.mockTest.api.Dto.Response.EnrollmentResponse;
+import com.Santiago.mockTest.infrastructure.abstracts.IEnrollmentService;
+
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,4 +26,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 @AllArgsConstructor
 public class EnrollmentController {
 
+  @Autowired
+  private final IEnrollmentService iEnrollmentService;
+
+  @GetMapping(path = "/all")
+  public ResponseEntity<List<EnrollmentResponse>> showAll() {
+
+    return ResponseEntity.ok(this.iEnrollmentService.getAll());
+  }
+
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<EnrollmentResponse> showEnrollment(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iEnrollmentService.findById(id));
+  }
+
+  @PostMapping(path = "/add")
+  public ResponseEntity<EnrollmentResponse> addEnrollment(@Validated @RequestBody EnrollmentRequest enrollmentRequest) {
+
+    return ResponseEntity.ok(this.iEnrollmentService.create(enrollmentRequest));
+  }
+
+  @PutMapping(path = "/{id}")
+  public ResponseEntity<EnrollmentResponse> updateEnrollment(@PathVariable Long id,
+      @Validated @RequestBody EnrollmentRequest enrollmentRequest) {
+
+    return ResponseEntity.ok(this.iEnrollmentService.update(enrollmentRequest, id));
+  }
+
+  @DeleteMapping(path = "/{id}")
+  public ResponseEntity<Boolean> deleteEnrollment(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iEnrollmentService.delete(id));
+  }
 }

@@ -2,6 +2,10 @@ package com.Santiago.mockTest.api.Controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Santiago.mockTest.api.Dto.Request.AssignmentRequest;
+import com.Santiago.mockTest.api.Dto.Response.AssignmentResponse;
+import com.Santiago.mockTest.infrastructure.abstracts.IAssignmentService;
+
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,4 +26,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 @AllArgsConstructor
 public class AssignmentController {
 
+  @Autowired
+  private final IAssignmentService iAssignmentService;
+
+  @GetMapping(path = "/all")
+  public ResponseEntity<List<AssignmentResponse>> showAll() {
+
+    return ResponseEntity.ok(this.iAssignmentService.getAll());
+  }
+
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<AssignmentResponse> showAssignment(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iAssignmentService.findById(id));
+  }
+
+  @PostMapping(path = "/add")
+  public ResponseEntity<AssignmentResponse> addAssignment(@Validated @RequestBody AssignmentRequest assignmentRequest) {
+
+    return ResponseEntity.ok(this.iAssignmentService.create(assignmentRequest));
+  }
+
+  @PutMapping(path = "/{id}")
+  public ResponseEntity<AssignmentResponse> updateAssignment(@PathVariable Long id,
+      @Validated @RequestBody AssignmentRequest assignmentRequest) {
+
+    return ResponseEntity.ok(this.iAssignmentService.update(assignmentRequest, id));
+  }
+
+  @DeleteMapping(path = "/{id}")
+  public ResponseEntity<Boolean> deleteAssignment(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iAssignmentService.delete(id));
+  }
 }
