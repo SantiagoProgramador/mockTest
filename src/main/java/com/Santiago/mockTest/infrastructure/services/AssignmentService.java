@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Santiago.mockTest.api.Dto.Request.AssignmentRequest;
-import com.Santiago.mockTest.api.Dto.Request.UserRequest;
 import com.Santiago.mockTest.api.Dto.Response.AssignmentResponse;
-import com.Santiago.mockTest.api.Dto.Response.UserResponse;
 import com.Santiago.mockTest.domain.entities.Assignment;
 import com.Santiago.mockTest.domain.repositories.AssignmentRepository;
 import com.Santiago.mockTest.infrastructure.abstracts.IAssignmentService;
@@ -39,29 +37,42 @@ public class AssignmentService implements IAssignmentService {
   @Override
   public AssignmentResponse create(AssignmentRequest request) {
     Assignment assignment = new Assignment();
+    this.assignmentRequestToAssignment(request, assignment);
+
+    return this.assignmentToAssignmentResponse(this.assignmentRepository.save(assignment));
   }
 
   @Override
   public AssignmentResponse update(AssignmentRequest request, Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'update'");
+    Assignment assignment = findAssignment(id);
+    this.assignmentRequestToAssignment(request, assignment);
+
+    return this.assignmentToAssignmentResponse(this.assignmentRepository.save(assignment));
   }
 
   @Override
   public boolean delete(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    Assignment assignment = findAssignment(id);
+    this.assignmentRepository.delete(assignment);
+
+    return true;
   }
 
   @Override
   public AssignmentResponse findById(Long id) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    Assignment assignment = findAssignment(id);
+
+    return this.assignmentToAssignmentResponse(assignment);
+  }
+
+  private Assignment findAssignment(Long id) {
+
+    return this.assignmentRepository.findById(id).orElseThrow();
   }
 
   @Override
   public List<AssignmentResponse> getAll() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+
+    return this.assignmentRepository.findAll().stream().map(this::assignmentToAssignmentResponse).toList();
   }
 }

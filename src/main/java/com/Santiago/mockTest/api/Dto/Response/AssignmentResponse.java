@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class AssignmentResponse {
 
   private Long id;
-  private String assigmentTitle;
+  private String assignmentTitle;
   private String description;
   private LocalDate dueDate;
   private Boolean isCompleted;

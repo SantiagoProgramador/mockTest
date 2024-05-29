@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class EnrollmentResponse {
 
   private Long id;
-  private LocalDate enrollmenDate;
+  private LocalDate enrollmentDate;
   private UserResponse userResponse;
   private CourseResponse courseResponse;
 }

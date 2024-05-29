@@ -17,11 +17,11 @@ public class MessageRequest {
   private String messageContent;
 
   @NotNull(message = "The sender is required")
-  private int senderId;
+  private Long senderId;
 
   @NotNull(message = "The receiver is required")
-  private int receiverId;
+  private Long receiverId;
 
   @NotNull(message = "You must specify which course you are contacting your instructor for.")
-  private int courseId;
+  private Long courseId;
 }

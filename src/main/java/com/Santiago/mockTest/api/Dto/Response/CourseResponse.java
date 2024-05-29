@@ -1,6 +1,5 @@
 package com.Santiago.mockTest.api.Dto.Response;
 
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,5 +1,6 @@
 package com.Santiago.mockTest.infrastructure.services;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -7,9 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Santiago.mockTest.api.Dto.Request.MessageRequest;
+import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
 import com.Santiago.mockTest.api.Dto.Response.MessageResponse;
+import com.Santiago.mockTest.api.Dto.Response.UserResponse;
+import com.Santiago.mockTest.domain.entities.Course;
 import com.Santiago.mockTest.domain.entities.Message;
+import com.Santiago.mockTest.domain.entities.User;
+import com.Santiago.mockTest.domain.repositories.CourseRepository;
 import com.Santiago.mockTest.domain.repositories.MessageRepository;
+import com.Santiago.mockTest.domain.repositories.UserRepository;
 import com.Santiago.mockTest.infrastructure.abstracts.IMessageService;
 
 import lombok.AllArgsConstructor;
@@ -21,11 +28,18 @@ public class MessageService implements IMessageService {
   @Autowired
   private final MessageRepository messageRepository;
 
+  @Autowired
+  private final CourseRepository courseRepository;
+
+  @Autowired
+  private final UserRepository userRepository;
+
   @Override
   public MessageResponse create(MessageRequest request) {
     Message message = new Message();
 
-    BeanUtils.copyProperties(request, message);
+
+    this.messageRequestToMessage(request, message);
 
     return this.messageToMessageResponse(this.messageRepository.save(message));
   }
@@ -65,17 +79,50 @@ public class MessageService implements IMessageService {
     return this.messageRepository.findAll().stream().map(this::messageToMessageResponse).toList();
   }
 
+  
+  private Message messageRequestToMessage(MessageRequest messageRequest, Message message) {
+
+    message.setCourse(this.courseRepository.findById(messageRequest.getCourseId()).orElseThrow());
+    message.setReceiver(this.userRepository.findById(messageRequest.getReceiverId()).orElseThrow());
+    message.setSender(this.userRepository.findById(messageRequest.getSenderId()).orElseThrow());
+    message.setMessageContent(messageRequest.getMessageContent());
+    message.setSentDate(LocalDate.now());
+
+    return message;
+  }
   private MessageResponse messageToMessageResponse(Message message) {
     MessageResponse messageResponse = new MessageResponse();
 
-    BeanUtils.copyProperties(message, messageResponse);
+    messageResponse.setCourse(this.courseToCourseResponse(message.getCourse()));
+    messageResponse.setReceiver(this.userToUserResponse(message.getReceiver()));
+    messageResponse.setSender(this.userToUserResponse(message.getSender()));
+    messageResponse.setMessageContent(message.getMessageContent());
 
     return messageResponse;
   }
 
-  private Message messageRequestToMessage(MessageRequest messageRequest, Message message) {
-    BeanUtils.copyProperties(messageRequest, message);
+  // @Override
+  // public List<MessageResponse> findByCourseId(Long id) {
+  // return
+  // this.messageRepository.findByCourseId(id).stream().map(this::messageToMessageResponse).toList();
+  // }
 
-    return message;
+  private CourseResponse courseToCourseResponse(Course course) {
+    CourseResponse courseResponse = new CourseResponse();
+
+    courseResponse.setCourseName(course.getCourseName());
+    courseResponse.setDescription(course.getDescription());
+    courseResponse.setId(course.getId());
+
+    return courseResponse;
   }
+
+  private UserResponse userToUserResponse(User user) {
+    UserResponse userResponse = new UserResponse();
+
+    BeanUtils.copyProperties(user, userResponse);
+
+    return userResponse;
+  }
+
 }

@@ -39,6 +39,7 @@ public class User {
   @Column(length = 40, nullable = false)
   private String fullName;
   @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private UserRole role;
 
   @OneToMany(mappedBy = "student", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = false)

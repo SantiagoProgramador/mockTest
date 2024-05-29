@@ -30,8 +30,8 @@ public class Assignment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column
-  private String assigmentTitle;
+  @Column(nullable = false)
+  private String assignmentTitle;
 
   @Lob
   private String description;

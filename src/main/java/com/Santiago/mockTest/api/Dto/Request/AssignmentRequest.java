@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AssignmentRequest {
 
-  @NotEmpty(message = "The title of the assigment is required")
-  private String assigmentTitle;
+  @NotEmpty(message = "The title of the assignment is required")
+  private String assignmentTitle;
 
   private String description;
 

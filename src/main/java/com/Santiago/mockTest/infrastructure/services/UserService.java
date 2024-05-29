@@ -2,8 +2,6 @@ package com.Santiago.mockTest.infrastructure.services;
 
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ public class UserService implements IUserService {
 
   @Override
   public UserResponse create(UserRequest request) {
-    
+
     User user = new User();
 
     BeanUtils.copyProperties(request, user);
@@ -57,8 +55,9 @@ public class UserService implements IUserService {
 
     return this.userToUserResponse(user);
   }
-  private User findUser(Long id){
-    
+
+  private User findUser(Long id) {
+
     return this.userRepository.findById(id).orElseThrow();
   }
 
@@ -67,14 +66,15 @@ public class UserService implements IUserService {
     return this.userRepository.findAll().stream().map(this::userToUserResponse).toList();
   }
 
-  private UserResponse userToUserResponse(User user){
+  private UserResponse userToUserResponse(User user) {
     UserResponse userResponse = new UserResponse();
 
     BeanUtils.copyProperties(user, userResponse);
 
     return userResponse;
   }
-  private User userRequestToUser(UserRequest userRequest, User user){
+
+  private User userRequestToUser(UserRequest userRequest, User user) {
     BeanUtils.copyProperties(userRequest, user);
 
     return user;
