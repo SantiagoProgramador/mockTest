@@ -19,9 +19,7 @@ public class MessageRequest {
   @NotNull(message = "The sender is required")
   private Long senderId;
 
-  @NotNull(message = "The receiver is required")
   private Long receiverId;
 
-  @NotNull(message = "You must specify which course you are contacting your instructor for.")
   private Long courseId;
 }

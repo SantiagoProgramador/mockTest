@@ -7,10 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Santiago.mockTest.api.Dto.Request.SubmissionRequest;
+import com.Santiago.mockTest.api.Dto.Response.AssignmentResponse;
 import com.Santiago.mockTest.api.Dto.Response.SubmissionResponse;
+import com.Santiago.mockTest.api.Dto.Response.UserResponse;
+import com.Santiago.mockTest.domain.entities.Assignment;
 import com.Santiago.mockTest.domain.entities.Submission;
+import com.Santiago.mockTest.domain.entities.User;
+import com.Santiago.mockTest.domain.repositories.AssignmentRepository;
 import com.Santiago.mockTest.domain.repositories.SubmissionRepository;
+import com.Santiago.mockTest.domain.repositories.UserRepository;
 import com.Santiago.mockTest.infrastructure.abstracts.ISubmissionService;
+import com.Santiago.mockTest.util.exceptions.IdNotFoundException;
 
 import lombok.AllArgsConstructor;
 
@@ -21,12 +28,18 @@ public class SubmissionService implements ISubmissionService {
   @Autowired
   private final SubmissionRepository submissionRepository;
 
+  @Autowired
+  private final AssignmentRepository assignmentRepository;
+
+  @Autowired
+  private final UserRepository userRepository;
+
   @Override
   public SubmissionResponse create(SubmissionRequest submissionRequest) {
 
     Submission submission = new Submission();
 
-    BeanUtils.copyProperties(submissionRequest, submission);
+    this.submissionRequestToSubmission(submissionRequest, submission);
 
     return this.submissionToSubmissionResponse(this.submissionRepository.save(submission));
   }
@@ -70,13 +83,35 @@ public class SubmissionService implements ISubmissionService {
     SubmissionResponse submissionResponse = new SubmissionResponse();
 
     BeanUtils.copyProperties(submission, submissionResponse);
+    submissionResponse.setAssignmentResponse(this.assignmentToAssignmentResponse(submission.getAssignment()));
+    submissionResponse.setStudent(this.userToUserResponse(submission.getStudent()));
 
     return submissionResponse;
   }
 
   private Submission submissionRequestToSubmission(SubmissionRequest submissionRequest, Submission submission) {
+    
     BeanUtils.copyProperties(submissionRequest, submission);
+    submission.setAssignment(this.assignmentRepository.findById(submissionRequest.getAssignmentId())
+        .orElseThrow(() -> new IdNotFoundException("Assignments")));
+    submission.setStudent(this.userRepository.findById(submissionRequest.getStudentId())
+        .orElseThrow(() -> new IdNotFoundException("Users")));
 
     return submission;
+  }
+
+  private UserResponse userToUserResponse(User user) {
+    UserResponse userResponse = new UserResponse();
+    BeanUtils.copyProperties(user, userResponse);
+
+    return userResponse;
+
+  }
+
+  private AssignmentResponse assignmentToAssignmentResponse(Assignment assignment) {
+    AssignmentResponse assignmentResponse = new AssignmentResponse();
+    BeanUtils.copyProperties(assignment, assignmentResponse);
+
+    return assignmentResponse;
   }
 }

@@ -17,8 +17,8 @@ public class SubmissionRequest {
   private String content;
 
   @NotNull(message = "The student is required")
-  private int studentId;
+  private Long studentId;
 
   @NotNull(message = "The assignment is required")
-  private int assignmentId;
+  private Long assignmentId;
 }

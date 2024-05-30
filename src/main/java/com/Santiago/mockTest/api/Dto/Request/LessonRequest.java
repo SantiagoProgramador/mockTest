@@ -20,6 +20,6 @@ public class LessonRequest {
   private String content;
 
   @NotNull(message = "The course is needed")
-  private int courseId;
+  private Long courseId;
 
 }

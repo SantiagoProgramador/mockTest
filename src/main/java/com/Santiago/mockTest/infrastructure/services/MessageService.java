@@ -18,6 +18,7 @@ import com.Santiago.mockTest.domain.repositories.CourseRepository;
 import com.Santiago.mockTest.domain.repositories.MessageRepository;
 import com.Santiago.mockTest.domain.repositories.UserRepository;
 import com.Santiago.mockTest.infrastructure.abstracts.IMessageService;
+import com.Santiago.mockTest.util.exceptions.IdNotFoundException;
 
 import lombok.AllArgsConstructor;
 
@@ -37,7 +38,6 @@ public class MessageService implements IMessageService {
   @Override
   public MessageResponse create(MessageRequest request) {
     Message message = new Message();
-
 
     this.messageRequestToMessage(request, message);
 
@@ -79,24 +79,40 @@ public class MessageService implements IMessageService {
     return this.messageRepository.findAll().stream().map(this::messageToMessageResponse).toList();
   }
 
-  
   private Message messageRequestToMessage(MessageRequest messageRequest, Message message) {
 
-    message.setCourse(this.courseRepository.findById(messageRequest.getCourseId()).orElseThrow());
-    message.setReceiver(this.userRepository.findById(messageRequest.getReceiverId()).orElseThrow());
-    message.setSender(this.userRepository.findById(messageRequest.getSenderId()).orElseThrow());
+    if (messageRequest.getCourseId() != null) {
+      message.setCourse(this.courseRepository.findById(messageRequest.getCourseId())
+          .orElseThrow(() -> new IdNotFoundException("courses")));
+    }
+    if (messageRequest.getReceiverId() != null) {
+      message.setReceiver(this.userRepository.findById(messageRequest.getReceiverId())
+          .orElseThrow(() -> new IdNotFoundException("User")));
+    }
+
+    message.setSender(this.userRepository.findById(messageRequest.getSenderId())
+        .orElseThrow(() -> new IdNotFoundException("messages")));
     message.setMessageContent(messageRequest.getMessageContent());
     message.setSentDate(LocalDate.now());
 
     return message;
   }
+
   private MessageResponse messageToMessageResponse(Message message) {
     MessageResponse messageResponse = new MessageResponse();
 
-    messageResponse.setCourse(this.courseToCourseResponse(message.getCourse()));
-    messageResponse.setReceiver(this.userToUserResponse(message.getReceiver()));
+    if (message.getCourse() != null) {
+      messageResponse.setCourse(this.courseToCourseResponse(message.getCourse()));
+
+    }
+    if (message.getReceiver() != null) {
+      messageResponse.setReceiver(this.userToUserResponse(message.getReceiver()));
+
+    }
     messageResponse.setSender(this.userToUserResponse(message.getSender()));
     messageResponse.setMessageContent(message.getMessageContent());
+    messageResponse.setSentDate(message.getSentDate());
+    messageResponse.setId(message.getId());
 
     return messageResponse;
   }
