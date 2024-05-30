@@ -129,6 +129,9 @@ public class MessageService implements IMessageService {
     courseResponse.setCourseName(course.getCourseName());
     courseResponse.setDescription(course.getDescription());
     courseResponse.setId(course.getId());
+    if (course.getInstructor() != null) {
+      courseResponse.setInstructor(this.userToUserResponse(course.getInstructor()));
+    }
 
     return courseResponse;
   }

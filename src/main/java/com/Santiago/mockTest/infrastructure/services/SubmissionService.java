@@ -8,9 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.Santiago.mockTest.api.Dto.Request.SubmissionRequest;
 import com.Santiago.mockTest.api.Dto.Response.AssignmentResponse;
+import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
+import com.Santiago.mockTest.api.Dto.Response.LessonResponse;
 import com.Santiago.mockTest.api.Dto.Response.SubmissionResponse;
 import com.Santiago.mockTest.api.Dto.Response.UserResponse;
 import com.Santiago.mockTest.domain.entities.Assignment;
+import com.Santiago.mockTest.domain.entities.Course;
+import com.Santiago.mockTest.domain.entities.Lesson;
 import com.Santiago.mockTest.domain.entities.Submission;
 import com.Santiago.mockTest.domain.entities.User;
 import com.Santiago.mockTest.domain.repositories.AssignmentRepository;
@@ -90,7 +94,7 @@ public class SubmissionService implements ISubmissionService {
   }
 
   private Submission submissionRequestToSubmission(SubmissionRequest submissionRequest, Submission submission) {
-    
+
     BeanUtils.copyProperties(submissionRequest, submission);
     submission.setAssignment(this.assignmentRepository.findById(submissionRequest.getAssignmentId())
         .orElseThrow(() -> new IdNotFoundException("Assignments")));
@@ -111,7 +115,21 @@ public class SubmissionService implements ISubmissionService {
   private AssignmentResponse assignmentToAssignmentResponse(Assignment assignment) {
     AssignmentResponse assignmentResponse = new AssignmentResponse();
     BeanUtils.copyProperties(assignment, assignmentResponse);
+    assignmentResponse.setLessonResponse(this.lessonToLessonResponse(assignment.getLesson()));
 
     return assignmentResponse;
+  }
+
+  private LessonResponse lessonToLessonResponse(Lesson lesson) {
+    LessonResponse lessonResponse = new LessonResponse();
+    BeanUtils.copyProperties(lesson, lessonResponse);
+    lessonResponse.setCourseResponse(this.courseToCourseResponse(lesson.getCourse()));
+    return lessonResponse;
+  }
+
+  private CourseResponse courseToCourseResponse(Course course) {
+    CourseResponse courseResponse = new CourseResponse();
+    BeanUtils.copyProperties(course, courseResponse);
+    return courseResponse;
   }
 }

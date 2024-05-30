@@ -18,5 +18,4 @@ public class UserResponse {
   private String email;
   private UserRole role;
   private String fullName;
-  private String password;
 }

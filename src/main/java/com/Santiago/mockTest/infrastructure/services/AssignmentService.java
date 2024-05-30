@@ -8,9 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.Santiago.mockTest.api.Dto.Request.AssignmentRequest;
 import com.Santiago.mockTest.api.Dto.Response.AssignmentResponse;
+import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
+import com.Santiago.mockTest.api.Dto.Response.LessonResponse;
+import com.Santiago.mockTest.api.Dto.Response.UserResponse;
 import com.Santiago.mockTest.domain.entities.Assignment;
+import com.Santiago.mockTest.domain.entities.Course;
+import com.Santiago.mockTest.domain.entities.Lesson;
+import com.Santiago.mockTest.domain.entities.User;
 import com.Santiago.mockTest.domain.repositories.AssignmentRepository;
+import com.Santiago.mockTest.domain.repositories.LessonRepository;
 import com.Santiago.mockTest.infrastructure.abstracts.IAssignmentService;
+import com.Santiago.mockTest.util.exceptions.IdNotFoundException;
 
 import lombok.AllArgsConstructor;
 
@@ -21,15 +29,22 @@ public class AssignmentService implements IAssignmentService {
   @Autowired
   private final AssignmentRepository assignmentRepository;
 
+  @Autowired
+  private final LessonRepository lessonRepository;
+
   private AssignmentResponse assignmentToAssignmentResponse(Assignment assignment) {
     AssignmentResponse assignmentResponse = new AssignmentResponse();
     BeanUtils.copyProperties(assignment, assignmentResponse);
+    assignmentResponse.setLessonResponse(this.lessonToLessonResponse(assignment.getLesson()));
+    assignmentResponse.setIsCompleted(false);
 
     return assignmentResponse;
   }
 
   private Assignment assignmentRequestToAssignment(AssignmentRequest assignmentRequest, Assignment assignment) {
     BeanUtils.copyProperties(assignmentRequest, assignment);
+    assignment.setLesson(this.lessonRepository.findById(assignmentRequest.getLessonId())
+        .orElseThrow(() -> new IdNotFoundException("Lessons")));
 
     return assignment;
   }
@@ -74,5 +89,27 @@ public class AssignmentService implements IAssignmentService {
   public List<AssignmentResponse> getAll() {
 
     return this.assignmentRepository.findAll().stream().map(this::assignmentToAssignmentResponse).toList();
+  }
+
+  private LessonResponse lessonToLessonResponse(Lesson lesson) {
+    LessonResponse lessonResponse = new LessonResponse();
+    BeanUtils.copyProperties(lesson, lessonResponse);
+    lessonResponse.setCourseResponse(this.courseToCourseResponse(lesson.getCourse()));
+    return lessonResponse;
+  }
+
+  private CourseResponse courseToCourseResponse(Course course) {
+    CourseResponse courseResponse = new CourseResponse();
+    BeanUtils.copyProperties(course, courseResponse);
+    if (course.getInstructor() != null) {
+      courseResponse.setInstructor(this.userToUserResponse(course.getInstructor()));
+    }
+    return courseResponse;
+  }
+
+  private UserResponse userToUserResponse(User user) {
+    UserResponse userResponse = new UserResponse();
+    BeanUtils.copyProperties(user, userResponse);
+    return userResponse;
   }
 }

@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import com.Santiago.mockTest.api.Dto.Request.LessonRequest;
 import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
 import com.Santiago.mockTest.api.Dto.Response.LessonResponse;
+import com.Santiago.mockTest.api.Dto.Response.UserResponse;
 import com.Santiago.mockTest.domain.entities.Course;
 import com.Santiago.mockTest.domain.entities.Lesson;
+import com.Santiago.mockTest.domain.entities.User;
 import com.Santiago.mockTest.domain.repositories.CourseRepository;
 import com.Santiago.mockTest.domain.repositories.LessonRepository;
 import com.Santiago.mockTest.infrastructure.abstracts.ILessonService;
@@ -90,6 +92,14 @@ public class LessonService implements ILessonService {
   private CourseResponse courseToCourseResponse(Course course) {
     CourseResponse courseResponse = new CourseResponse();
     BeanUtils.copyProperties(course, courseResponse);
+    if (course.getInstructor() != null)
+      courseResponse.setInstructor(this.userToUserReponse(course.getInstructor()));
     return courseResponse;
+  }
+
+  private UserResponse userToUserReponse(User user) {
+    UserResponse userResponse = new UserResponse();
+    BeanUtils.copyProperties(user, userResponse);
+    return userResponse;
   }
 }

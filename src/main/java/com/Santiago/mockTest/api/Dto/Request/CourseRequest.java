@@ -18,6 +18,6 @@ public class CourseRequest {
   @NotBlank(message = "The description is needed")
   private String description;
 
-  private int instructorId;
+  private Long instructorId;
 
 }

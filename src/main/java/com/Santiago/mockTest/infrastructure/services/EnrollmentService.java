@@ -107,7 +107,11 @@ public class EnrollmentService implements IEnrollmentService {
     CourseResponse courseResponse = new CourseResponse();
 
     BeanUtils.copyProperties(course, courseResponse);
+    if (course.getInstructor() != null) {
+      courseResponse.setInstructor(this.userToUserResponse(course.getInstructor()));
 
+    }
     return courseResponse;
   }
+
 }

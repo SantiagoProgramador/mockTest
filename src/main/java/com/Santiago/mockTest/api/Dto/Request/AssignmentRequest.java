@@ -25,6 +25,6 @@ public class AssignmentRequest {
   private LocalDate dueDate;
 
   @NotNull(message = "Need to specify whats the lesson of the assignment")
-  private int lessonId;
+  private Long lessonId;
 
 }
