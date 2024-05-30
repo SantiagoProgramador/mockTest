@@ -7,5 +7,5 @@ import com.Santiago.mockTest.domain.entities.Course;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
-
+    List<User> findByCourseId(Long id);
 }

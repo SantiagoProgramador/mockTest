@@ -7,5 +7,5 @@ import com.Santiago.mockTest.domain.entities.Lesson;
 
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
-
+    
 }

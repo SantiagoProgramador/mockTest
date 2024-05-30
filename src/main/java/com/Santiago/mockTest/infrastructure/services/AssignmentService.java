@@ -91,6 +91,18 @@ public class AssignmentService implements IAssignmentService {
     return this.assignmentRepository.findAll().stream().map(this::assignmentToAssignmentResponse).toList();
   }
 
+  @Override
+  public List<AssignmentResponse> getAllInLesson(Long id){
+
+    return this.assignmentRepository.findByLessonId(id).stream().map(this::assignmentToAssignmentResponse).toList();
+  }
+  @Override
+  public List<SubmissionResponse> getAllInAssignment(Long id){
+
+      return this.assignmentRepository.findByAssignmentId(id).stream().map().toList();
+  }
+
+
   private LessonResponse lessonToLessonResponse(Lesson lesson) {
     LessonResponse lessonResponse = new LessonResponse();
     BeanUtils.copyProperties(lesson, lessonResponse);

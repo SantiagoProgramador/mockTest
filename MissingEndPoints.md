@@ -1,15 +1,15 @@
-19. Obtener Todas las Tareas de una Lección
+<!-- 19. Obtener Todas las Tareas de una Lección
  GET /lessons/{lesson_id}/assignments
- Descripción: Obtener todas las tareas de una lección específica.
+ Descripción: Obtener todas las tareas de una lección específica. -->
 
-23. Obtener Todos los Cursos Inscritos por un Usuario
+<!-- 23. Obtener Todos los Cursos Inscritos por un Usuario
  GET /users/{user_id}/courses
  Descripción: Obtener todos los cursos en los que está inscrito un usuario
-específico.
+específico. -->
 
-24. Obtener Todos los Usuarios Inscritos en un Curso
+<!-- 24. Obtener Todos los Usuarios Inscritos en un Curso
  GET /courses/{course_id}/users
- Descripción: Obtener todos los usuarios inscritos en un curso específico.
+ Descripción: Obtener todos los usuarios inscritos en un curso específico. -->
 
 29. Obtener Todas las Entregas de una Tarea
  GET /assignments/{assignment_id}/submissions

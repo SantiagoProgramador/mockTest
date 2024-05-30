@@ -74,9 +74,23 @@ public class UserService implements IUserService {
     return userResponse;
   }
 
+  @Override
+  public List<CourseResponse> getAllInUser(Long id ){
+
+    return this.userRepository.findByUserId(id).stream().map(this::courseToCourseResponse).toList();
+  }
+
   private User userRequestToUser(UserRequest userRequest, User user) {
     BeanUtils.copyProperties(userRequest, user);
 
     return user;
+  }
+
+  private CourseResponse courseToCourseResponse(Course course){
+    CourseResponse courseResponse = new CourseResponse();
+
+    BeanUtils.copyProperties(course,courseResponse);
+
+    return courseResponse;
   }
 }

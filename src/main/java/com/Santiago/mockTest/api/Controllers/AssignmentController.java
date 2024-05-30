@@ -35,6 +35,18 @@ public class AssignmentController {
     return ResponseEntity.ok(this.iAssignmentService.getAll());
   }
 
+  @GetMapping(path = "/lesson/{id}")
+  public ResponseEntity<List<AssignmentResponse>> showAssignmentsInLesson(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iAssignmentService.getAllInLesson(id));
+  }
+
+  @GetMapping(path = "/{id}/submissions")
+  public ResponseEntity<List<SubmissionResponse>> showSubmissionsInAsignment(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iAssignmentService.getAllInAssignment(id));
+  }
+
   @GetMapping(path = "/{id}")
   public ResponseEntity<AssignmentResponse> showAssignment(@PathVariable Long id) {
 

@@ -35,6 +35,12 @@ public class CourseController {
     return ResponseEntity.ok(this.iCourseService.getAll());
   }
 
+  @GetMapping(path = "/{id}/users")
+  public ResponseEntity<List<UserResponse>> showAll(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iCourseService.getAllInCourse(id));
+  }
+
   @GetMapping(path = "/{id}")
   public ResponseEntity<CourseResponse> showCourse(@PathVariable Long id) {
 

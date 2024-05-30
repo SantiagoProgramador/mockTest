@@ -35,6 +35,12 @@ public class UserController {
         return ResponseEntity.ok(this.iUserService.getAll());
     }
 
+    @GetMapping(path = "/{id}/courses")
+    public ResponseEntity<List<CourseResponse>> showCoursesInUser(@PathVariable Long id){
+        
+        return ResponseEntity.ok(this.iUserService.getAllInUser(id));
+    }
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<UserResponse> showUser(@PathVariable Long id){
 

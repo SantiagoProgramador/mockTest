@@ -70,6 +70,12 @@ public class CourseService implements ICourseService {
     return this.courseRepository.findAll().stream().map(this::courseToCourseResponse).toList();
   }
 
+  @Override
+  public List<UserResponse> getAllInCourse(Long id){
+
+    return this.courseRepository.findByCourseId(id).stream().map(this::userToUserResponse).toList();
+  }
+
   private CourseResponse courseToCourseResponse(Course course) {
     CourseResponse courseResponse = new CourseResponse();
     BeanUtils.copyProperties(course, courseResponse);
