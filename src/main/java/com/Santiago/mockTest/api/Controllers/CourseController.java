@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Santiago.mockTest.api.Dto.Request.CourseRequest;
 import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
+import com.Santiago.mockTest.api.Dto.Response.EnrollmentToCourse;
+import com.Santiago.mockTest.api.Dto.Response.MessageToCourse;
 import com.Santiago.mockTest.infrastructure.abstracts.ICourseService;
 
 import lombok.AllArgsConstructor;
@@ -35,16 +37,22 @@ public class CourseController {
     return ResponseEntity.ok(this.iCourseService.getAll());
   }
 
-  @GetMapping(path = "/{id}/users")
-  public ResponseEntity<List<UserResponse>> showAll(@PathVariable Long id) {
-
-    return ResponseEntity.ok(this.iCourseService.getAllInCourse(id));
-  }
-
   @GetMapping(path = "/{id}")
   public ResponseEntity<CourseResponse> showCourse(@PathVariable Long id) {
 
     return ResponseEntity.ok(this.iCourseService.findById(id));
+  }
+
+  @GetMapping(path = "/{id}/messages")
+  public ResponseEntity<List<MessageToCourse>> showMessagesInCourse(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iCourseService.getMessagesInCourse(id));
+  }
+
+  @GetMapping(path = "/{id}/users")
+  public ResponseEntity<List<EnrollmentToCourse>> showStudentsInCourse(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iCourseService.getUsersInCourse(id));
   }
 
   @PostMapping(path = "/add")

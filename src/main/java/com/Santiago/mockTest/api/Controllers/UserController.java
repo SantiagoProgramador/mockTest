@@ -3,6 +3,8 @@ package com.Santiago.mockTest.api.Controllers;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Santiago.mockTest.api.Dto.Request.UserRequest;
+import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
+import com.Santiago.mockTest.api.Dto.Response.SubmissionToUser;
 import com.Santiago.mockTest.api.Dto.Response.UserResponse;
 import com.Santiago.mockTest.infrastructure.abstracts.IUserService;
 
@@ -25,42 +27,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(path = "/users")
 @AllArgsConstructor
 public class UserController {
-    
+
     @Autowired
     private final IUserService iUserService;
 
     @GetMapping(path = "/all")
-    public ResponseEntity<List<UserResponse>> showAll(){
+    public ResponseEntity<List<UserResponse>> showAll() {
 
         return ResponseEntity.ok(this.iUserService.getAll());
     }
 
-    @GetMapping(path = "/{id}/courses")
-    public ResponseEntity<List<CourseResponse>> showCoursesInUser(@PathVariable Long id){
-        
-        return ResponseEntity.ok(this.iUserService.getAllInUser(id));
-    }
-
     @GetMapping(path = "/{id}")
-    public ResponseEntity<UserResponse> showUser(@PathVariable Long id){
+    public ResponseEntity<UserResponse> showUser(@PathVariable Long id) {
 
         return ResponseEntity.ok(this.iUserService.findById(id));
     }
 
+    @GetMapping(path = "/{id}/submissions")
+    public ResponseEntity<List<SubmissionToUser>> showSubmissionsInUser(@PathVariable Long id) {
+
+        return ResponseEntity.ok(this.iUserService.getSubmissionsInUser(id));
+    }
+
+    @GetMapping(path = "/{id}/courses")
+    public ResponseEntity<List<CourseResponse>> showCoursesInUser(@PathVariable Long id) {
+
+        return ResponseEntity.ok(this.iUserService.getCoursesInUser(id));
+    }
+
     @PostMapping(path = "/add")
-    public ResponseEntity<UserResponse> addUser(@Validated @RequestBody UserRequest userRequest){
+    public ResponseEntity<UserResponse> addUser(@Validated @RequestBody UserRequest userRequest) {
 
         return ResponseEntity.ok(this.iUserService.create(userRequest));
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @Validated @RequestBody UserRequest userRequest){
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id,
+            @Validated @RequestBody UserRequest userRequest) {
 
         return ResponseEntity.ok(this.iUserService.update(userRequest, id));
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable Long id){
+    public ResponseEntity<Boolean> deleteUser(@PathVariable Long id) {
 
         return ResponseEntity.ok(this.iUserService.delete(id));
     }

@@ -117,12 +117,6 @@ public class MessageService implements IMessageService {
     return messageResponse;
   }
 
-  // @Override
-  // public List<MessageResponse> findByCourseId(Long id) {
-  // return
-  // this.messageRepository.findByCourseId(id).stream().map(this::messageToMessageResponse).toList();
-  // }
-
   private CourseResponse courseToCourseResponse(Course course) {
     CourseResponse courseResponse = new CourseResponse();
 
@@ -142,6 +136,12 @@ public class MessageService implements IMessageService {
     BeanUtils.copyProperties(user, userResponse);
 
     return userResponse;
+  }
+
+  @Override
+  public List<MessageResponse> getMessagesInUsers(Long senderId, Long receiverId) {
+
+    return messageRepository.findBySenderIdAndReceiverId(senderId, receiverId).stream().map(this::messageToMessageResponse).toList();
   }
 
 }

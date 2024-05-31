@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Santiago.mockTest.api.Dto.Request.LessonRequest;
+import com.Santiago.mockTest.api.Dto.Response.AssignmentResponse;
+import com.Santiago.mockTest.api.Dto.Response.AssignmentToLesson;
 import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
 import com.Santiago.mockTest.api.Dto.Response.LessonResponse;
 import com.Santiago.mockTest.api.Dto.Response.UserResponse;
+import com.Santiago.mockTest.domain.entities.Assignment;
 import com.Santiago.mockTest.domain.entities.Course;
 import com.Santiago.mockTest.domain.entities.Lesson;
 import com.Santiago.mockTest.domain.entities.User;
@@ -101,5 +104,19 @@ public class LessonService implements ILessonService {
     UserResponse userResponse = new UserResponse();
     BeanUtils.copyProperties(user, userResponse);
     return userResponse;
+  }
+
+  @Override
+  public List<AssignmentToLesson> getAssignmentsInALesson(Long id) {
+    Lesson lesson = this.findLesson(id);
+
+    return lesson.getAssignments().stream().map(this::assignmentToAssignmentToLesson).toList();
+  }
+
+  private AssignmentToLesson assignmentToAssignmentToLesson(Assignment assignment) {
+    AssignmentToLesson assignmentResponse = new AssignmentToLesson();
+    BeanUtils.copyProperties(assignment, assignmentResponse);
+
+    return assignmentResponse;
   }
 }

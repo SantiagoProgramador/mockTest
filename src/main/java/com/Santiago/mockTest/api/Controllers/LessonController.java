@@ -3,6 +3,7 @@ package com.Santiago.mockTest.api.Controllers;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Santiago.mockTest.api.Dto.Request.LessonRequest;
+import com.Santiago.mockTest.api.Dto.Response.AssignmentToLesson;
 import com.Santiago.mockTest.api.Dto.Response.LessonResponse;
 import com.Santiago.mockTest.infrastructure.abstracts.ILessonService;
 
@@ -39,6 +40,12 @@ public class LessonController {
   public ResponseEntity<LessonResponse> showLesson(@PathVariable Long id) {
 
     return ResponseEntity.ok(this.iLessonService.findById(id));
+  }
+
+  @GetMapping(path = "/{id}/assignments")
+  public ResponseEntity<List<AssignmentToLesson>> showAssignmentsInLesson(@PathVariable Long id) {
+
+    return ResponseEntity.ok(this.iLessonService.getAssignmentsInALesson(id));
   }
 
   @PostMapping(path = "/add")

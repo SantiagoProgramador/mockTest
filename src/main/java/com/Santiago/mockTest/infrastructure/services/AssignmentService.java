@@ -10,10 +10,12 @@ import com.Santiago.mockTest.api.Dto.Request.AssignmentRequest;
 import com.Santiago.mockTest.api.Dto.Response.AssignmentResponse;
 import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
 import com.Santiago.mockTest.api.Dto.Response.LessonResponse;
+import com.Santiago.mockTest.api.Dto.Response.SubmissionResponse;
 import com.Santiago.mockTest.api.Dto.Response.UserResponse;
 import com.Santiago.mockTest.domain.entities.Assignment;
 import com.Santiago.mockTest.domain.entities.Course;
 import com.Santiago.mockTest.domain.entities.Lesson;
+import com.Santiago.mockTest.domain.entities.Submission;
 import com.Santiago.mockTest.domain.entities.User;
 import com.Santiago.mockTest.domain.repositories.AssignmentRepository;
 import com.Santiago.mockTest.domain.repositories.LessonRepository;
@@ -82,7 +84,7 @@ public class AssignmentService implements IAssignmentService {
 
   private Assignment findAssignment(Long id) {
 
-    return this.assignmentRepository.findById(id).orElseThrow();
+    return this.assignmentRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Assignments"));
   }
 
   @Override
@@ -90,18 +92,6 @@ public class AssignmentService implements IAssignmentService {
 
     return this.assignmentRepository.findAll().stream().map(this::assignmentToAssignmentResponse).toList();
   }
-
-  @Override
-  public List<AssignmentResponse> getAllInLesson(Long id){
-
-    return this.assignmentRepository.findByLessonId(id).stream().map(this::assignmentToAssignmentResponse).toList();
-  }
-  @Override
-  public List<SubmissionResponse> getAllInAssignment(Long id){
-
-      return this.assignmentRepository.findByAssignmentId(id).stream().map().toList();
-  }
-
 
   private LessonResponse lessonToLessonResponse(Lesson lesson) {
     LessonResponse lessonResponse = new LessonResponse();
@@ -123,5 +113,19 @@ public class AssignmentService implements IAssignmentService {
     UserResponse userResponse = new UserResponse();
     BeanUtils.copyProperties(user, userResponse);
     return userResponse;
+  }
+
+  @Override
+  public List<SubmissionResponse> getSubmissionsInAssignment(Long id) {
+    Assignment assignment = this.findAssignment(id);
+
+    return assignment.getSubmissions().stream().map(this::submissionToSubmissionResponse).toList();
+  }
+
+  private SubmissionResponse submissionToSubmissionResponse(Submission submission) {
+    SubmissionResponse submissionResponse = new SubmissionResponse();
+    BeanUtils.copyProperties(submission, submissionResponse);
+
+    return submissionResponse;
   }
 }

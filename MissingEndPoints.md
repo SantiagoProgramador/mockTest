@@ -11,18 +11,19 @@ específico. -->
  GET /courses/{course_id}/users
  Descripción: Obtener todos los usuarios inscritos en un curso específico. -->
 
-29. Obtener Todas las Entregas de una Tarea
+<!-- 29. Obtener Todas las Entregas de una Tarea
  GET /assignments/{assignment_id}/submissions
- Descripción: Obtener todas las entregas de una tarea específica.
+ Descripción: Obtener todas las entregas de una tarea específica. -->
 
-30. Obtener Todas las Entregas de un Usuario
+<!-- 30. Obtener Todas las Entregas de un Usuario
  GET /users/{user_id}/submissions
- Descripción: Obtener todas las entregas de un usuario específico.
+ Descripción: Obtener todas las entregas de un usuario específico. -->
 
-37. Obtener Mensajes de un Curso
+<!-- 37. Obtener Mensajes de un Curso
  GET /courses/{course_id}/messages
- Descripción: Obtener todos los mensajes de un curso específico.
+ Descripción: Obtener todos los mensajes de un curso específico. -->
 
+<!-- 
 38. Obtener Mensajes entre Usuarios
  GET /messages?sender_id={sender_id}&receiver_id={receiver_id}
- Descripción: Obtener todos los mensajes entre dos usuarios específicos.
+ Descripción: Obtener todos los mensajes entre dos usuarios específicos. -->

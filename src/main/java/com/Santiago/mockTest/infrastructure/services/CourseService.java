@@ -8,8 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.Santiago.mockTest.api.Dto.Request.CourseRequest;
 import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
+import com.Santiago.mockTest.api.Dto.Response.EnrollmentToCourse;
+import com.Santiago.mockTest.api.Dto.Response.MessageResponse;
+import com.Santiago.mockTest.api.Dto.Response.MessageToCourse;
 import com.Santiago.mockTest.api.Dto.Response.UserResponse;
 import com.Santiago.mockTest.domain.entities.Course;
+import com.Santiago.mockTest.domain.entities.Enrollment;
+import com.Santiago.mockTest.domain.entities.Message;
 import com.Santiago.mockTest.domain.entities.User;
 import com.Santiago.mockTest.domain.repositories.CourseRepository;
 import com.Santiago.mockTest.domain.repositories.UserRepository;
@@ -61,19 +66,13 @@ public class CourseService implements ICourseService {
   }
 
   private Course findCourse(Long id) {
-    return this.courseRepository.findById(id).orElseThrow();
+    return this.courseRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Courses"));
   }
 
   @Override
   public List<CourseResponse> getAll() {
 
     return this.courseRepository.findAll().stream().map(this::courseToCourseResponse).toList();
-  }
-
-  @Override
-  public List<UserResponse> getAllInCourse(Long id){
-
-    return this.courseRepository.findByCourseId(id).stream().map(this::userToUserResponse).toList();
   }
 
   private CourseResponse courseToCourseResponse(Course course) {
@@ -101,5 +100,37 @@ public class CourseService implements ICourseService {
     UserResponse userResponse = new UserResponse();
     BeanUtils.copyProperties(user, userResponse);
     return userResponse;
+  }
+
+  @Override
+  public List<EnrollmentToCourse> getUsersInCourse(Long id) {
+    Course course = this.findCourse(id);
+
+    return course.getEnrollments().stream().map(this::enrollmentToEnrollmentResponse).toList();
+  }
+
+  private EnrollmentToCourse enrollmentToEnrollmentResponse(Enrollment enrollment) {
+    EnrollmentToCourse enrollmentResponse = new EnrollmentToCourse();
+    BeanUtils.copyProperties(enrollment, enrollmentResponse);
+    enrollmentResponse.setUserResponse(this.userToUserResponse(enrollment.getStudent()));
+    return enrollmentResponse;
+  }
+
+  @Override
+  public List<MessageToCourse> getMessagesInCourse(Long id) {
+    Course course = this.findCourse(id);
+
+    return course.getMessages().stream().map(this::messageToMessageResponse).toList();
+  }
+
+  private MessageToCourse messageToMessageResponse(Message message) {
+    MessageToCourse messageResponse = new MessageToCourse();
+    BeanUtils.copyProperties(message, messageResponse);
+    if (message.getReceiver() != null) {
+      messageResponse.setReceiver(this.userToUserResponse(message.getReceiver()));
+    }
+    messageResponse.setSender(this.userToUserResponse(message.getSender()));
+
+    return messageResponse;
   }
 }

@@ -9,6 +9,8 @@ import com.Santiago.mockTest.infrastructure.abstracts.IMessageService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +36,18 @@ public class MessageController {
 
     return ResponseEntity.ok(this.iMessageService.getAll());
   }
-  
+
   @GetMapping(path = "/{id}")
   public ResponseEntity<MessageResponse> showMessage(@PathVariable Long id) {
 
     return ResponseEntity.ok(this.iMessageService.findById(id));
+  }
+
+  @GetMapping
+  public ResponseEntity<List<MessageResponse>> showMessagesInUsers(@RequestParam Long senderId,
+      @RequestParam Long receiverId) {
+
+    return ResponseEntity.ok(this.iMessageService.getMessagesInUsers(senderId, receiverId));
   }
 
   @PostMapping(path = "/add")

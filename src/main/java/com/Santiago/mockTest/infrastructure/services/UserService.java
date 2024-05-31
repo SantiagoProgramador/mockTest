@@ -7,10 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Santiago.mockTest.api.Dto.Request.UserRequest;
+import com.Santiago.mockTest.api.Dto.Response.AssignmentResponse;
+import com.Santiago.mockTest.api.Dto.Response.CourseResponse;
+import com.Santiago.mockTest.api.Dto.Response.SubmissionResponse;
+import com.Santiago.mockTest.api.Dto.Response.SubmissionToUser;
 import com.Santiago.mockTest.api.Dto.Response.UserResponse;
+import com.Santiago.mockTest.domain.entities.Assignment;
+import com.Santiago.mockTest.domain.entities.Course;
+import com.Santiago.mockTest.domain.entities.Submission;
 import com.Santiago.mockTest.domain.entities.User;
 import com.Santiago.mockTest.domain.repositories.UserRepository;
 import com.Santiago.mockTest.infrastructure.abstracts.IUserService;
+import com.Santiago.mockTest.util.exceptions.IdNotFoundException;
 
 import lombok.AllArgsConstructor;
 
@@ -58,7 +66,7 @@ public class UserService implements IUserService {
 
   private User findUser(Long id) {
 
-    return this.userRepository.findById(id).orElseThrow();
+    return this.userRepository.findById(id).orElseThrow(() -> new IdNotFoundException("users"));
   }
 
   @Override
@@ -74,23 +82,43 @@ public class UserService implements IUserService {
     return userResponse;
   }
 
-  @Override
-  public List<CourseResponse> getAllInUser(Long id ){
-
-    return this.userRepository.findByUserId(id).stream().map(this::courseToCourseResponse).toList();
-  }
-
   private User userRequestToUser(UserRequest userRequest, User user) {
     BeanUtils.copyProperties(userRequest, user);
 
     return user;
   }
 
-  private CourseResponse courseToCourseResponse(Course course){
+  @Override
+  public List<CourseResponse> getCoursesInUser(Long id) {
+    User user = this.findUser(id);
+
+    return user.getCourses().stream().map(this::courseToCourseResponse).toList();
+  }
+
+  private CourseResponse courseToCourseResponse(Course course) {
     CourseResponse courseResponse = new CourseResponse();
-
-    BeanUtils.copyProperties(course,courseResponse);
-
+    BeanUtils.copyProperties(course, courseResponse);
     return courseResponse;
   }
+
+  @Override
+  public List<SubmissionToUser> getSubmissionsInUser(Long id) {
+    User user = this.findUser(id);
+
+    return user.getSubmissions().stream().map(this::submissionToSubmissionToUser).toList();
+  }
+
+  private SubmissionToUser submissionToSubmissionToUser(Submission submission) {
+    SubmissionToUser submissionToUser = new SubmissionToUser();
+    BeanUtils.copyProperties(submission, submissionToUser);
+    submissionToUser.setAssignmentResponse(this.assignmentToAssignmentResponse(submission.getAssignment()));
+    return submissionToUser;
+  }
+
+  private AssignmentResponse assignmentToAssignmentResponse(Assignment assignment) {
+    AssignmentResponse assignmentResponse = new AssignmentResponse();
+    BeanUtils.copyProperties(assignment, assignmentResponse);
+    return assignmentResponse;
+  }
+
 }

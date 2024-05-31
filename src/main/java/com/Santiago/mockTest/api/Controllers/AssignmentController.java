@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Santiago.mockTest.api.Dto.Request.AssignmentRequest;
 import com.Santiago.mockTest.api.Dto.Response.AssignmentResponse;
+import com.Santiago.mockTest.api.Dto.Response.SubmissionResponse;
 import com.Santiago.mockTest.infrastructure.abstracts.IAssignmentService;
 
 import lombok.AllArgsConstructor;
@@ -35,16 +36,10 @@ public class AssignmentController {
     return ResponseEntity.ok(this.iAssignmentService.getAll());
   }
 
-  @GetMapping(path = "/lesson/{id}")
-  public ResponseEntity<List<AssignmentResponse>> showAssignmentsInLesson(@PathVariable Long id) {
-
-    return ResponseEntity.ok(this.iAssignmentService.getAllInLesson(id));
-  }
-
   @GetMapping(path = "/{id}/submissions")
   public ResponseEntity<List<SubmissionResponse>> showSubmissionsInAsignment(@PathVariable Long id) {
 
-    return ResponseEntity.ok(this.iAssignmentService.getAllInAssignment(id));
+    return ResponseEntity.ok(this.iAssignmentService.getSubmissionsInAssignment(id));
   }
 
   @GetMapping(path = "/{id}")
